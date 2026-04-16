@@ -4,10 +4,9 @@ spring:
 
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/skill_bridge}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${PGUSER:postgres}
+    password: ${PGPASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
-
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -15,7 +14,6 @@ spring:
       idle-timeout: 300000
       max-lifetime: 580000
       connection-test-query: SELECT 1
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -34,4 +32,4 @@ application:
 groq:
   api:
     url: https://api.groq.com/openai/v1/chat/completions
-    key: ${GROQ_API_KEY}
+    key: ${GROQ_API_KEY:test}
