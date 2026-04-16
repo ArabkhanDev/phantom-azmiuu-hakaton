@@ -50,7 +50,6 @@ public class User {
     @PrePersist
     private void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.role = UserRole.USER;
         this.isActive = true;
     }
 }

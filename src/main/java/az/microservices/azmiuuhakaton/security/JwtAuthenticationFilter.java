@@ -1,5 +1,6 @@
 package az.microservices.azmiuuhakaton.security;
 
+import az.microservices.azmiuuhakaton.exception.NotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import static az.microservices.azmiuuhakaton.exception.ExceptionMessage.USER_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
@@ -54,6 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else{
+                throw new NotFoundException(USER_NOT_FOUND.getMessage());
             }
         }
         filterChain.doFilter(request, response);

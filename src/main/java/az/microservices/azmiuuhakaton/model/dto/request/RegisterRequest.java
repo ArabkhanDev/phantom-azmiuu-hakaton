@@ -1,5 +1,6 @@
 package az.microservices.azmiuuhakaton.model.dto.request;
 
+import az.microservices.azmiuuhakaton.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,5 @@ public class RegisterRequest {
     @NotBlank(message = "Password can not be empty")
     private String password;
 
-    @NotBlank(message = "Phone number can not be empty")
-    private String phone;
+    private UserRole role;
 }
