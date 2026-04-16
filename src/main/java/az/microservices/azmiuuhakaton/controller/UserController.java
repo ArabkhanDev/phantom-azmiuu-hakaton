@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("by-role/{role}")
     public ResponseEntity<UserResponse> getUserByRole(@PathVariable UserRole role) {
         return ResponseEntity.ok(userService.getUserByRole(role));
     }
