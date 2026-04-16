@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
@@ -32,4 +34,23 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column
+    private boolean isActive;
+
+    @Column
+    private boolean isEmailVerified;
+
+    @Column
+    private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    private void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.role = UserRole.USER;
+        this.isActive = true;
+    }
 }
