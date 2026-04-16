@@ -3,9 +3,9 @@ spring:
     name: azmiuu-hakaton
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/skill-bridge
-    username: postgres
-    password: 1234
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/${POSTGRES_DB}:skill_bridge}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -31,4 +31,5 @@ application:
 
 groq:
   api:
-    key: test
+    url: https://api.groq.com/openai/v1/chat/completions
+    key: ${GROQ_API_KEY}
