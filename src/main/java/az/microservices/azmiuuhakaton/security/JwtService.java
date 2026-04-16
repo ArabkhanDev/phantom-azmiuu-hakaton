@@ -34,8 +34,16 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(Map.of("role", Objects.requireNonNull(userDetails.getAuthorities().iterator().next().getAuthority()))), userDetails);
+    public String generateToken(UserDetails userDetails, Long userId) {
+        var map = new HashMap<String, Object>();
+
+        map.put("role", Objects.requireNonNull(
+                userDetails.getAuthorities().iterator().next().getAuthority()
+        ));
+
+        map.put("userId", userId);
+
+        return generateToken(map, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

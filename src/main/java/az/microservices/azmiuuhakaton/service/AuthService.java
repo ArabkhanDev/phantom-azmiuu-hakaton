@@ -34,7 +34,8 @@ public class AuthService {
         userRepository.save(user);
 
         var userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-        var jwtToken = jwtService.generateToken(userDetails);
+        var userId = userRepository.findByEmail(request.getEmail()).get().getId();
+        var jwtToken = jwtService.generateToken(userDetails, userId);
 
         return new AuthenticationResponse(jwtToken);
     }
@@ -48,7 +49,8 @@ public class AuthService {
         );
 
         var userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        var jwtToken = jwtService.generateToken(userDetails);
+        var userId = userRepository.findByEmail(request.getEmail()).get().getId();
+        var jwtToken = jwtService.generateToken(userDetails, userId);
         return new AuthenticationResponse(jwtToken);
     }
 }

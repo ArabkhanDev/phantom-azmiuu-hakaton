@@ -3,7 +3,10 @@ package az.microservices.azmiuuhakaton.service;
 import az.microservices.azmiuuhakaton.enums.UserRole;
 import az.microservices.azmiuuhakaton.model.dto.request.UserDto;
 import az.microservices.azmiuuhakaton.model.dto.response.UserResponse;
+import az.microservices.azmiuuhakaton.model.dto.response.SkillResponse;
 import az.microservices.azmiuuhakaton.model.entity.User;
+import az.microservices.azmiuuhakaton.model.entity.Skill;
+import az.microservices.azmiuuhakaton.repository.SkillRepository;
 import az.microservices.azmiuuhakaton.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SkillRepository skillRepository;
 
+    @Transactional(readOnly = true)
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll()
                 .stream()
@@ -28,6 +33,7 @@ public class UserService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getUserById(Long id) {
         return toResponse(findUserById(id));
     }
@@ -108,6 +114,31 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional
+    public UserResponse selectSkill(Long userId, Long skillId, String requesterEmail, boolean requesterIsAdmin) {
+        User user = findUserById(userId);
+
+        if (!requesterIsAdmin && (requesterEmail == null || !requesterEmail.equals(user.getEmail()))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not allowed");
+        }
+
+        Skill skill = skillRepository.findById(skillId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Skill not found with id: " + skillId));
+
+        if (user.getSkills() == null) {
+            user.setSkills(new java.util.ArrayList<>());
+        }
+
+        boolean alreadySelected = user.getSkills().stream()
+                .anyMatch(s -> s.getId() != null && s.getId().equals(skillId));
+
+        if (!alreadySelected) {
+            user.getSkills().add(skill);
+        }
+
+        return toResponse(userRepository.save(user));
+    }
+
     private User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id));
@@ -132,6 +163,9 @@ public class UserService {
                 .emailVerified(user.getIsEmailVerified())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .skills(user.getSkills() != null
+                        ? user.getSkills().stream().map(SkillResponse::fromEntity).toList()
+                        : List.of())
                 .build();
     }
 
@@ -141,7 +175,13 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> getUserByRole(UserRole role) {
         return userRepository.findByRole(role).stream().map(this::toResponse).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getByUserByUsername(String username) {
+        return userRepository.findByEmail(username).map(this::toResponse).orElse(null);
     }
 }

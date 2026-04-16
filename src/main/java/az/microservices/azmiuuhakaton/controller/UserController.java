@@ -6,6 +6,10 @@ import az.microservices.azmiuuhakaton.model.dto.response.UserResponse;
 import az.microservices.azmiuuhakaton.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,6 +41,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getByUserByUsername(username));
+    }
+
+
     @GetMapping("by-role/{role}")
     public ResponseEntity<List<UserResponse>> getUserByRole(@PathVariable UserRole role) {
         return ResponseEntity.ok(userService.getUserByRole(role));
@@ -63,5 +73,16 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/skills/{skillId}")
+    public ResponseEntity<UserResponse> selectSkill(@PathVariable Long userId, @PathVariable Long skillId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String requesterEmail = authentication.getName();
+        boolean requesterIsAdmin = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(a -> "ROLE_ADMIN".equals("ROLE_ADMIN"));
+
+        return ResponseEntity.ok(userService.selectSkill(userId, skillId, requesterEmail, requesterIsAdmin));
     }
 }

@@ -7,7 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import az.microservices.azmiuuhakaton.model.dto.response.SkillResponse;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +28,6 @@ public class UserResponse {
     private boolean emailVerified;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private List<SkillResponse> skills;
 }
