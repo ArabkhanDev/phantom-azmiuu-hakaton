@@ -1,12 +1,11 @@
 package az.microservices.azmiuuhakaton.controller;
 
 import az.microservices.azmiuuhakaton.enums.UserRole;
-import az.microservices.azmiuuhakaton.model.dto.request.UserDto;
+import az.microservices.azmiuuhakaton.model.dto.common.UserDto;
 import az.microservices.azmiuuhakaton.model.dto.response.UserResponse;
 import az.microservices.azmiuuhakaton.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;

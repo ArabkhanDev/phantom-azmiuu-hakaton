@@ -1,7 +1,7 @@
 package az.microservices.azmiuuhakaton.service;
 
 import az.microservices.azmiuuhakaton.enums.UserRole;
-import az.microservices.azmiuuhakaton.model.dto.request.UserDto;
+import az.microservices.azmiuuhakaton.model.dto.common.UserDto;
 import az.microservices.azmiuuhakaton.model.dto.response.UserResponse;
 import az.microservices.azmiuuhakaton.model.dto.response.SkillResponse;
 import az.microservices.azmiuuhakaton.model.entity.User;

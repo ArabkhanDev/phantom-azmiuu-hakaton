@@ -1,4 +1,4 @@
-package az.microservices.azmiuuhakaton.model.dto.request;
+package az.microservices.azmiuuhakaton.model.dto.common;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

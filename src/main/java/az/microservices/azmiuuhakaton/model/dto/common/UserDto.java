@@ -1,4 +1,4 @@
-package az.microservices.azmiuuhakaton.model.dto.request;
+package az.microservices.azmiuuhakaton.model.dto.common;
 
 import az.microservices.azmiuuhakaton.enums.UserRole;
 import lombok.AllArgsConstructor;
@@ -6,10 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Used for create, update (PUT) and partial update (PATCH).
- * Validation is done in the service because PATCH must allow null fields.
- */
 @Getter
 @Setter
 @NoArgsConstructor

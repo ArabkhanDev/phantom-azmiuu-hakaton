@@ -51,6 +51,10 @@ public class Skill {
     @Builder.Default
     private List<User> users = new ArrayList<>();
 
+    @OneToMany(mappedBy = "skill")
+    @Builder.Default
+    private List<Task> tasks = new ArrayList<>();
+
     @PrePersist
     private void onCreate() {
         this.createdAt = LocalDateTime.now();

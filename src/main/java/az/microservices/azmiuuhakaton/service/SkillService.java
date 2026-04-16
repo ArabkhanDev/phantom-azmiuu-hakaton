@@ -1,6 +1,6 @@
 package az.microservices.azmiuuhakaton.service;
 
-import az.microservices.azmiuuhakaton.model.dto.request.SkillDto;
+import az.microservices.azmiuuhakaton.model.dto.common.SkillDto;
 import az.microservices.azmiuuhakaton.model.dto.response.SkillResponse;
 import az.microservices.azmiuuhakaton.model.entity.Skill;
 import az.microservices.azmiuuhakaton.repository.SkillRepository;
