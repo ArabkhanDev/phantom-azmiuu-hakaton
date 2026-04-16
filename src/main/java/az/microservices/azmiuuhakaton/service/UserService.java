@@ -140,4 +140,10 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, fieldName + " can not be empty");
         }
     }
+
+    public UserResponse getUserByRole(UserRole role) {
+        return userRepository.findByRole(role)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with role: " + role));
+    }
 }

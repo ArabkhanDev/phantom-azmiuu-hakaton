@@ -1,5 +1,6 @@
 package az.microservices.azmiuuhakaton.controller;
 
+import az.microservices.azmiuuhakaton.enums.UserRole;
 import az.microservices.azmiuuhakaton.model.dto.request.UserDto;
 import az.microservices.azmiuuhakaton.model.dto.response.UserResponse;
 import az.microservices.azmiuuhakaton.service.UserService;
@@ -34,6 +35,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserByRole(@PathVariable UserRole role) {
+        return ResponseEntity.ok(userService.getUserByRole(role));
     }
 
     @PostMapping
