@@ -141,9 +141,7 @@ public class UserService {
         }
     }
 
-    public UserResponse getUserByRole(UserRole role) {
-        return userRepository.findByRole(role)
-                .map(this::toResponse)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with role: " + role));
+    public List<UserResponse> getUserByRole(UserRole role) {
+        return userRepository.findByRole(role).stream().map(this::toResponse).toList();
     }
 }

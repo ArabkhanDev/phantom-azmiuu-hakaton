@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("by-role/{role}")
-    public ResponseEntity<UserResponse> getUserByRole(@PathVariable UserRole role) {
+    public ResponseEntity<List<UserResponse>> getUserByRole(@PathVariable UserRole role) {
         return ResponseEntity.ok(userService.getUserByRole(role));
     }
 
