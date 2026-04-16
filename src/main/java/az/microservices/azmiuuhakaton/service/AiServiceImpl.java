@@ -22,7 +22,7 @@ public class AiServiceImpl {
     @Value("${groq.api.key}")
     private String apiKey;
 
-    private static final String GROQ_URL =
+    public static final String GROQ_URL =
             "https://api.groq.com/openai/v1/chat/completions";
 
     public List<AiGeneratedTaskDto> generateTasks(String prompt) {
