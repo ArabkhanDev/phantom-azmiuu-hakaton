@@ -3,10 +3,16 @@ spring:
     name: azmiuu-hakaton
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/${POSTGRES_DB}:skill_bridge}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/skill_bridge}
+    username: ${PGPASSWORD:postgres}
+    password: ${PGUSER:postgres}
     driver-class-name: org.postgresql.Driver
+
+    datasource:
+      url: jdbc:postgresql://localhost:5432/skill_bridge
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
