@@ -55,7 +55,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/accept-invitation"
                         )
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

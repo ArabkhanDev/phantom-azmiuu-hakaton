@@ -1,9 +1,20 @@
 package az.microservices.azmiuuhakaton.model.entity;
 
 import az.microservices.azmiuuhakaton.enums.UserRole;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +37,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Email(message = "Email format is not correct")
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -36,10 +46,12 @@ public class User {
     private UserRole role;
 
     @Column
-    private boolean isActive;
+    @Builder.Default
+    private Boolean isActive = true;
 
     @Column
-    private boolean isEmailVerified;
+    @Builder.Default
+    private Boolean isEmailVerified = false;
 
     @Column
     private LocalDateTime createdAt;
