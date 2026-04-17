@@ -96,7 +96,7 @@ public class SubmissionController {
     }
 
     @PostMapping("/user/{userId}/ai-review")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
     public ResponseEntity<List<SubmissionResponse>> aiReviewUserSubmissions(@PathVariable Long userId) {
         return ResponseEntity.ok(submissionService.aiReviewUserSubmissions(userId));
     }
