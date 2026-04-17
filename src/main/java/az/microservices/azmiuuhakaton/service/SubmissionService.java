@@ -222,7 +222,7 @@ public class SubmissionService {
                 Submission saved = submissionRepository.save(submission);
                 results.add(SubmissionResponse.fromEntity(saved));
 
-                Thread.sleep(100);
+                Thread.sleep(200);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
