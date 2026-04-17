@@ -3,6 +3,7 @@ package az.microservices.azmiuuhakaton.controller;
 import az.microservices.azmiuuhakaton.enums.SubmissionStatus;
 import az.microservices.azmiuuhakaton.model.dto.common.SubmissionDto;
 import az.microservices.azmiuuhakaton.model.dto.response.SubmissionResponse;
+import az.microservices.azmiuuhakaton.model.dto.response.UserSkillActivationResponse;
 import az.microservices.azmiuuhakaton.service.SubmissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -99,6 +100,12 @@ public class SubmissionController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
     public ResponseEntity<List<SubmissionResponse>> aiReviewUserSubmissions(@PathVariable Long userId) {
         return ResponseEntity.ok(submissionService.aiReviewUserSubmissions(userId));
+    }
+
+    @PostMapping("/user/{userId}/activate-skills")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
+    public ResponseEntity<UserSkillActivationResponse> activateUserSkills(@PathVariable Long userId) {
+        return ResponseEntity.ok(submissionService.updateUserSkillStatusBasedOnPerformance(userId));
     }
 
     @PostMapping("/{id}/mentor-review")

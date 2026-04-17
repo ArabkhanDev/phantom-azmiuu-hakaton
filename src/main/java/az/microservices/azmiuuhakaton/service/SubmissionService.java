@@ -5,6 +5,7 @@ import az.microservices.azmiuuhakaton.model.dto.common.AIReviewResultDto;
 import az.microservices.azmiuuhakaton.model.dto.common.SubmissionDto;
 import az.microservices.azmiuuhakaton.model.dto.response.AIReviewRequest;
 import az.microservices.azmiuuhakaton.model.dto.response.SubmissionResponse;
+import az.microservices.azmiuuhakaton.model.dto.response.UserSkillActivationResponse;
 import az.microservices.azmiuuhakaton.model.entity.Submission;
 import az.microservices.azmiuuhakaton.model.entity.Task;
 import az.microservices.azmiuuhakaton.model.entity.User;
@@ -384,6 +385,77 @@ public class SubmissionService {
                 request.getTaskDescription(),
                 request.getSubmissionAnswer()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public double calculateUserAverageScore(Long userId) {
+        User user = findUserById(userId);
+        
+        List<Submission> submissions = submissionRepository.findByUserId(userId);
+        
+        if (submissions.isEmpty()) {
+            return 0.0;
+        }
+        
+        // Filter submissions that have scores
+        List<Submission> scoredSubmissions = submissions.stream()
+                .filter(s -> s.getScore() != null)
+                .toList();
+        
+        if (scoredSubmissions.isEmpty()) {
+            return 0.0;
+        }
+        
+        double totalScore = scoredSubmissions.stream()
+                .mapToInt(Submission::getScore)
+                .sum();
+        
+        return totalScore / scoredSubmissions.size();
+    }
+
+    @Transactional
+    public UserSkillActivationResponse updateUserSkillStatusBasedOnPerformance(Long userId) {
+        User user = findUserById(userId);
+        
+        List<Submission> submissions = submissionRepository.findByUserId(userId);
+        List<Submission> scoredSubmissions = submissions.stream()
+                .filter(s -> s.getScore() != null)
+                .toList();
+        
+        double averageScore = scoredSubmissions.isEmpty() ? 0.0 : 
+                scoredSubmissions.stream()
+                        .mapToInt(Submission::getScore)
+                        .average()
+                        .orElse(0.0);
+        
+        boolean skillsActivated = false;
+        String message;
+        
+        if (averageScore >= 80.0) {
+            // Activate user's skills if average score is 80 or higher
+            user.getSkills().forEach(skill -> skill.setIsActive(true));
+            user.setIsActive(true);
+            userRepository.save(user);
+            
+            skillsActivated = true;
+            message = String.format("Skills activated for user %s. Average score: %.1f", 
+                    user.getFullName(), averageScore);
+        } else {
+            message = String.format("Skills not activated for user %s. Average score: %.1f (threshold: 80.0)", 
+                    user.getFullName(), averageScore);
+        }
+        
+        return UserSkillActivationResponse.builder()
+                .userId(user.getId())
+                .userName(user.getFullName())
+                .userEmail(user.getEmail())
+                .averageScore(averageScore)
+                .skillsActivated(skillsActivated)
+                .message(message)
+                .activationTime(skillsActivated ? java.time.LocalDateTime.now() : null)
+                .totalSubmissions(submissions.size())
+                .scoredSubmissions(scoredSubmissions.size())
+                .build();
     }
 
     private Submission findSubmissionById(Long id) {
