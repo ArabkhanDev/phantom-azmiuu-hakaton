@@ -240,25 +240,41 @@ public class SubmissionService {
     public AIReviewResultDto generateAIReview(AIReviewRequest request) {
 
         try {
-            Map<String, Object> body = new HashMap<>();
+            ObjectMapper mapper = new ObjectMapper();
 
+            // Request body for Groq API
+            Map<String, Object> body = new HashMap<>();
             body.put("model", "llama-3.3-70b-versatile");
+            body.put("temperature", 0.3);
+
+            // Force JSON output
+            body.put("response_format", Map.of("type", "json_object"));
 
             List<Map<String, String>> messages = List.of(
                     Map.of(
                             "role", "system",
                             "content",
-                            "You are an expert evaluator. Return ONLY valid JSON: feedback, score (0-100)."
+                            """
+                            You are an expert technical evaluator.
+                            Return ONLY valid JSON with this structure:
+                            {
+                              "score": 0,
+                              "feedback": "",
+                              "skills": [],
+                              "skillValidation": {},
+                              "strengths": [],
+                              "weaknesses": []
+                            }
+                            No markdown. No explanation. Only JSON.
+                            """
                     ),
                     Map.of(
                             "role", "user",
-                            "content",
-                            buildEvaluationPrompt(request)
+                            "content", buildEvaluationPrompt(request)
                     )
             );
 
             body.put("messages", messages);
-            body.put("temperature", 0.2);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -274,11 +290,15 @@ public class SubmissionService {
 
             String content = extractContent(response.getBody());
 
-            ObjectMapper mapper = new ObjectMapper();
+            // Cleanup in case model wraps JSON in markdown
+            content = content.replace("```json", "")
+                    .replace("```", "")
+                    .trim();
+
             return mapper.readValue(content, AIReviewResultDto.class);
 
         } catch (Exception e) {
-            throw new RuntimeException("AI review failed", e);
+            throw new RuntimeException("AI review failed: " + e.getMessage(), e);
         }
     }
 
