@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static az.microservices.azmiuuhakaton.enums.SubmissionStatus.AI_REVIEWED;
+import static az.microservices.azmiuuhakaton.enums.SubmissionStatus.PENDING;
 import static az.microservices.azmiuuhakaton.service.AiServiceImpl.GROQ_URL;
 
 @Service
@@ -100,7 +101,7 @@ public class SubmissionService {
         }
 
         SubmissionStatus status = dto.getStatus() != null ?
-                SubmissionStatus.valueOf(dto.getStatus()) : SubmissionStatus.PENDING;
+                SubmissionStatus.valueOf(dto.getStatus()) : PENDING;
 
         Submission submission = Submission.builder()
                 .task(task)
@@ -163,7 +164,7 @@ public class SubmissionService {
 
     @Transactional(readOnly = true)
     public List<SubmissionResponse> getPendingSubmissions() {
-        return submissionRepository.findByStatus(SubmissionStatus.PENDING)
+        return submissionRepository.findByStatusOrStatus(PENDING, AI_REVIEWED)
                 .stream()
                 .map(SubmissionResponse::fromEntity)
                 .toList();

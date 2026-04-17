@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,4 +27,6 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByStatus(@Param("status") SubmissionStatus status);
 
     boolean existsByTaskIdAndUserId(Long taskId, Long userId);
+
+    List<Submission> findByStatusOrStatus(SubmissionStatus submissionStatus, SubmissionStatus submissionStatus1);
 }

@@ -91,7 +91,7 @@ public class SubmissionController {
     }
 
     @GetMapping("/pending")
-    @PreAuthorize("hasRole('MENTOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
     public ResponseEntity<List<SubmissionResponse>> getPendingSubmissions() {
         return ResponseEntity.ok(submissionService.getPendingSubmissions());
     }
